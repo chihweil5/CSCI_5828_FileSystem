@@ -32,7 +32,9 @@ var processFile = function(i, filenames, total) {
   });
 }
 
-fs.readdir('.', function(err, filenames) {
+var path = process.argv[2];
+console.log("Current Directory: ", path);
+fs.readdir(path, function(err, filenames) {
   if (err) throw err;
   console.log("Number of Directory Entries:", filenames.length)
   processFile(0, filenames, 0);
