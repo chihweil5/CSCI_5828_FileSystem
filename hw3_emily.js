@@ -18,7 +18,10 @@ var handleFile = function(stats, i, filenames, total, curpath) {
 
 var handleDir = function(i, filenames, total, curpath) {
    fs.readdir(curpath + `/${filenames[i]}`, function(err, newfilenames) {
-      if (err) throw err;
+       if (err) {
+           console.log(`Error: ${err}`);
+           return;
+       }
       console.log(`Number of ${filenames[i]} Directory Entries:`, newfilenames.length)
       processFile(0, newfilenames, 0, curpath + `/${filenames[i]}`);
     });
@@ -34,7 +37,10 @@ var processFile = function(i, filenames, total, curpath) {
   var name = `${curpath}/${filenames[i]}`;
   //console.log(`we are processing ${curpath}/${filenames[i]}`)
   fs.stat(name, function(err, stats) {
-    if (err) throw err;
+    if (err) {
+        console.log(`Error: ${err}`);
+        return;
+    }
     if (stats.isFile()) {
       handleFile(stats, i, filenames, total, curpath);
     } else {
