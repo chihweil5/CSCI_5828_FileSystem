@@ -1,7 +1,7 @@
 var fs = require('fs');
 
 var all_done = function(size) {
-  console.log("Total size:", size);
+  // console.log("Total size:", size);
   console.log("Result so far:", result);
 }
 
@@ -13,7 +13,7 @@ var handleFile = function(stats, i, filenames, total, curpath) {
     result += stats.size;
     processFile(i+1, filenames, total+stats.size, curpath);
   }
-  console.log(`size of ${filenames[i]} is ${stats.size}`);
+  // console.log(`size of ${filenames[i]} is ${stats.size}`);
 }
 
 var handleDir = function(i, filenames, total, curpath) {
@@ -22,7 +22,7 @@ var handleDir = function(i, filenames, total, curpath) {
            console.log(`Error: ${err}`);
            return;
        }
-      console.log(`Number of ${filenames[i]} Directory Entries:`, newfilenames.length)
+      // console.log(`Number of ${filenames[i]} Directory Entries:`, newfilenames.length)
       processFile(0, newfilenames, 0, curpath + `/${filenames[i]}`);
     });
   if (i === filenames.length - 1) {
@@ -35,18 +35,22 @@ var testname = '.';
 
 var processFile = function(i, filenames, total, curpath) {
   var name = `${curpath}/${filenames[i]}`;
-  //console.log(`we are processing ${curpath}/${filenames[i]}`)
-  fs.stat(name, function(err, stats) {
-    if (err) {
-        console.log(`Error: ${err}`);
-        return;
-    }
-    if (stats.isFile()) {
-      handleFile(stats, i, filenames, total, curpath);
-    } else {
-      handleDir(i, filenames, total, curpath);
-    }
-  });
+  
+  if (`${filenames[i]}` != `undefined`){
+    // console.log(`we are processing ${curpath}/${filenames[i]}`)
+    fs.stat(name, function(err, stats) {
+      if (err) {
+          console.log(`Error: ${err}`);
+          return;
+      }
+      if (stats.isFile()) {
+        handleFile(stats, i, filenames, total, curpath);
+      } else {
+        handleDir(i, filenames, total, curpath);
+      }
+    });
+  }
+  
 }
 
 var path = process.argv[2];
@@ -54,6 +58,6 @@ console.log("Current Directory: ", path);
 var result = 0;
 fs.readdir(path, function(err, filenames) {
   if (err) throw err;
-  console.log("Number of Directory Entries:", filenames.length)
+  // console.log("Number of Directory Entries:", filenames.length)
   processFile(0, filenames, 0, path);
 });
